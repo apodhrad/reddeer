@@ -291,6 +291,7 @@ public class GefEditor extends DefaultEditor {
 	public static class MyMouseUtils {
 
 		private Widget widget;
+		private int time;
 
 		public MyMouseUtils(Widget widget) {
 			this.widget = widget;
@@ -360,6 +361,7 @@ public class GefEditor extends DefaultEditor {
 			event.type = SWT.MouseDown;
 			event.widget = widget;
 			event.count = count;
+			time = event.time;
 			Display.getDisplay().post(event);
 		}
 
@@ -382,6 +384,7 @@ public class GefEditor extends DefaultEditor {
 			event.type = SWT.MouseDoubleClick;
 			event.widget = widget;
 			event.count = count;
+			event.time = time;
 			Display.getDisplay().post(event);
 		}
 
