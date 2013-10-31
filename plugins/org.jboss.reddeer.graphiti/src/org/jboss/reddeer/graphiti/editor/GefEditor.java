@@ -314,12 +314,38 @@ public class GefEditor extends DefaultEditor {
 
 				@Override
 				public void run() {
-					mouseMove(x, y);
-					mouseDown(x, y, 1);
-					mouseUp(x, y, 1);
-					mouseDown(x, y, 1, 2);
-					mouseDoubleClick(x, y, 1, 2);
-					mouseUp(x, y, 1, 2);
+					// mouse move
+					Event move = new Event();
+					move.x = x;
+					move.y = y;
+					move.type = SWT.MouseMove;
+					// mouse down
+					Event down = new Event();
+					down.x = x;
+					down.y = y;
+					down.button = 1;
+					down.type = SWT.MouseDown;
+					// mouse double click
+					Event dblClick = new Event();
+					dblClick.x = x;
+					dblClick.y = y;
+					dblClick.button = 1;
+					dblClick.type = SWT.MouseDoubleClick;
+					dblClick.time = down.time;
+					// mouse up
+					Event up = new Event();
+					up.x = x;
+					up.y = y;
+					up.button = 1;
+					up.type = SWT.MouseUp;
+					
+					// send events
+					Display.getDisplay().post(move);
+					Display.getDisplay().post(down);
+					Display.getDisplay().post(up);
+					Display.getDisplay().post(down);
+					Display.getDisplay().post(dblClick);
+					Display.getDisplay().post(up);
 				}
 			});
 		}
