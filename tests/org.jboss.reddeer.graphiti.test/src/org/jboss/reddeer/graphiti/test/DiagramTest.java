@@ -1,7 +1,5 @@
 package org.jboss.reddeer.graphiti.test;
 
-import static org.junit.Assert.assertEquals;
-
 import org.eclipse.gef.EditPart;
 import org.eclipse.ui.part.EditorPart;
 import org.hamcrest.BaseMatcher;
@@ -9,7 +7,6 @@ import org.hamcrest.Description;
 import org.jboss.reddeer.eclipse.jdt.ui.ProjectExplorer;
 import org.jboss.reddeer.eclipse.jface.wizard.NewWizardDialog;
 import org.jboss.reddeer.graphiti.editor.GefEditor;
-import org.jboss.reddeer.graphiti.matcher.All;
 import org.jboss.reddeer.swt.exception.SWTLayerException;
 import org.jboss.reddeer.swt.impl.button.PushButton;
 import org.jboss.reddeer.swt.impl.combo.DefaultCombo;

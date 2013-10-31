@@ -111,6 +111,10 @@ public class GefEditor extends DefaultEditor {
 
 					@Override
 					public void mouseDoubleClick(MouseEvent e) {
+						System.out.println(e);
+						System.out.println("button = " + e.button);
+						System.out.println("stateMask = " + e.stateMask);
+						System.out.println("cont = " + e.count);
 						System.out.println("===== mouseDoubleClick");
 					}
 				});
@@ -312,9 +316,9 @@ public class GefEditor extends DefaultEditor {
 					mouseMove(x, y);
 					mouseDown(x, y, 1);
 					mouseUp(x, y, 1);
-					mouseMove(x, y);
-					mouseDown(x, y, 1);
-					mouseUp(x, y, 1);
+					mouseDown(x, y, 1, 2);
+					mouseDoubleClick(x, y, 1, 2);
+					mouseUp(x, y, 1, 2);
 				}
 			});
 		}
@@ -345,6 +349,39 @@ public class GefEditor extends DefaultEditor {
 			event.button = button;
 			event.type = SWT.MouseUp;
 			event.widget = widget;
+			Display.getDisplay().post(event);
+		}
+		
+		protected void mouseDown(final int x, final int y, final int button, int count) {
+			Event event = new Event();
+			event.x = x;
+			event.y = y;
+			event.button = button;
+			event.type = SWT.MouseDown;
+			event.widget = widget;
+			event.count = count;
+			Display.getDisplay().post(event);
+		}
+
+		protected void mouseUp(final int x, final int y, final int button, int count) {
+			Event event = new Event();
+			event.x = x;
+			event.y = y;
+			event.button = button;
+			event.type = SWT.MouseUp;
+			event.widget = widget;
+			event.count = count;
+			Display.getDisplay().post(event);
+		}
+		
+		protected void mouseDoubleClick(final int x, final int y, final int button, int count) {
+			Event event = new Event();
+			event.x = x;
+			event.y = y;
+			event.button = button;
+			event.type = SWT.MouseDoubleClick;
+			event.widget = widget;
+			event.count = count;
 			Display.getDisplay().post(event);
 		}
 
