@@ -17,6 +17,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -101,21 +102,35 @@ public class GefEditor extends DefaultEditor {
 
 					@Override
 					public void mouseUp(MouseEvent e) {
-						System.out.println("===== mouseUp");
+						System.out.println("=== mouseUp ===");
+						System.out.println(e);
+						System.out.println("button = " + e.button);
+						System.out.println("stateMask = " + e.stateMask);
+						System.out.println("count = " + e.count);
+						System.out.println("e.time = " + e.time);
+						System.out.println("===============");
 					}
 
 					@Override
 					public void mouseDown(MouseEvent e) {
-						System.out.println("===== mouseDown");
+						System.out.println("=== mouseDown ===");
+						System.out.println(e);
+						System.out.println("button = " + e.button);
+						System.out.println("stateMask = " + e.stateMask);
+						System.out.println("count = " + e.count);
+						System.out.println("e.time = " + e.time);
+						System.out.println("=================");
 					}
 
 					@Override
 					public void mouseDoubleClick(MouseEvent e) {
+						System.out.println("=== mouseDoubleClick ===");
 						System.out.println(e);
 						System.out.println("button = " + e.button);
 						System.out.println("stateMask = " + e.stateMask);
-						System.out.println("cont = " + e.count);
-						System.out.println("===== mouseDoubleClick");
+						System.out.println("count = " + e.count);
+						System.out.println("e.time = " + e.time);
+						System.out.println("========================");
 					}
 				});
 			}
@@ -197,15 +212,32 @@ public class GefEditor extends DefaultEditor {
 			hover(figure, count + 1);
 		}
 	}
-	
+
 	public void doubleClick(EditPart editPart) {
 		doubleClick(getFigure(editPart));
 	}
-	
+
 	public void doubleClick(IFigure figure) {
 		Rectangle rec = BoundsCalculation.getAbsoluteBounds(getFigureCanvas(), figure);
 		final Point centralPoint = BoundsCalculation.getCentralPoint(rec);
 		new MyMouseUtils(getFigureCanvas()).doubleClick(centralPoint.x, centralPoint.y);
+		// Display.syncExec(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		//
+		// // mouse double click
+		// Event dblClick = new Event();
+		// dblClick.x = 156;
+		// dblClick.y = 137;
+		// dblClick.button = 1;
+		// dblClick.type = SWT.MouseDoubleClick;
+		// dblClick.count = 2;
+		//
+		// getFigureCanvas().removeMouseListener(listener);
+		// getFigureCanvas().notifyListeners(SWT.MouseDoubleClick, dblClick);
+		// }
+		// });
 	}
 
 	private IFigure getFigure(EditPart editPart) {
@@ -324,28 +356,44 @@ public class GefEditor extends DefaultEditor {
 					down.x = x;
 					down.y = y;
 					down.button = 1;
+					down.count = 1;
 					down.type = SWT.MouseDown;
-					// mouse double click
-					Event dblClick = new Event();
-					dblClick.x = x;
-					dblClick.y = y;
-					dblClick.button = 1;
-					dblClick.type = SWT.MouseDoubleClick;
-					dblClick.time = down.time;
 					// mouse up
 					Event up = new Event();
 					up.x = x;
 					up.y = y;
 					up.button = 1;
+					up.count = 1;
 					up.type = SWT.MouseUp;
-					
+					// mouse down
+					Event down2 = new Event();
+					down2.x = x;
+					down2.y = y;
+					down2.button = 1;
+					down2.count = 2;
+					down2.type = SWT.MouseDown;
+					// mouse double click
+					Event dblClick = new Event();
+					dblClick.x = x;
+					dblClick.y = y;
+					dblClick.button = 1;
+					dblClick.count = 2;
+					dblClick.type = SWT.MouseDoubleClick;
+					// mouse up
+					Event up2 = new Event();
+					up2.x = x;
+					up2.y = y;
+					up2.button = 1;
+					up2.count = 2;
+					up2.type = SWT.MouseUp;
 					// send events
 					Display.getDisplay().post(move);
 					Display.getDisplay().post(down);
 					Display.getDisplay().post(up);
-					Display.getDisplay().post(down);
+					Display.getDisplay().post(down2);
+					dblClick.time = down2.time;
 					Display.getDisplay().post(dblClick);
-					Display.getDisplay().post(up);
+					Display.getDisplay().post(up2);
 				}
 			});
 		}
@@ -378,7 +426,7 @@ public class GefEditor extends DefaultEditor {
 			event.widget = widget;
 			Display.getDisplay().post(event);
 		}
-		
+
 		protected void mouseDown(final int x, final int y, final int button, int count) {
 			Event event = new Event();
 			event.x = x;
@@ -401,7 +449,7 @@ public class GefEditor extends DefaultEditor {
 			event.count = count;
 			Display.getDisplay().post(event);
 		}
-		
+
 		protected void mouseDoubleClick(final int x, final int y, final int button, int count) {
 			Event event = new Event();
 			event.x = x;

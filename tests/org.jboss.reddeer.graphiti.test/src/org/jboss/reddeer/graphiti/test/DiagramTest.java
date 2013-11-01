@@ -63,10 +63,10 @@ public class DiagramTest extends RedDeerTest {
 		System.out.println("klik 6");
 		editor.click(120, 120);
 		checkCount(editor, 6);
-		
+
 		EditPart editPart = editor.getEditParts(new IsSelectable()).get(0);
 		editor.doubleClick(editPart);
-		
+
 		new DefaultShell("Rename EClass");
 		new DefaultText(0).setText("foo");
 		new PushButton("OK").click();
