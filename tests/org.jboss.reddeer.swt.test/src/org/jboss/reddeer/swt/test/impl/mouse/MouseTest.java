@@ -44,32 +44,32 @@ public class MouseTest extends RedDeerTest {
 	private Label label1;
 	private Label label2;
 
-	// @Test
+	@Test
 	public void mouseClickTest() {
 		Rectangle rShell = getAbsoluteBounds(shell);
 		new DefaultMouse().click(rShell.x, rShell.y);
 		new WaitUntil(new LabelHasText("Simple Click"));
 	}
 
-	// @Test
+	@Test
 	public void mouseDoubleClickTest() {
 		Rectangle rShell = getAbsoluteBounds(shell);
 		new DefaultMouse().doubleClick(rShell.x, rShell.y);
 		new WaitUntil(new LabelHasText("Double Click"));
 	}
 
-	// @Test
+	@Test
 	public void mouseHoverTest() {
 		Rectangle rLabel = getAbsoluteBounds(label);
 		new DefaultMouse().hover(rLabel.x, rLabel.y);
 		new WaitUntil(new LabelHasText("Hover"));
 	}
 
-	@Test
+	@Test(expected = UnsupportedOperationException.class)
 	public void mouseDragAndDropTest() {
 		Rectangle r1 = getAbsoluteBounds(label1);
 		Rectangle r2 = getAbsoluteBounds(label2);
-		int c = 10;
+		int c = 100;
 		new DefaultMouse().dragAndDrop(r1.x + c, r1.y + c, r2.x + c, r2.y + c);
 		new WaitUntil(new LabelHasText("", 1));
 		new WaitUntil(new LabelHasText("Test", 2));
