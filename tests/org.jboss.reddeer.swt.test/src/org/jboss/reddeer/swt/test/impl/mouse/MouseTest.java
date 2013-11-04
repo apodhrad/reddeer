@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.jboss.reddeer.swt.condition.WaitCondition;
 import org.jboss.reddeer.swt.impl.label.DefaultLabel;
-import org.jboss.reddeer.swt.impl.mouse.DefaultMouse;
+import org.jboss.reddeer.swt.impl.mouse.AWTMouse;
 import org.jboss.reddeer.swt.impl.shell.DefaultShell;
 import org.jboss.reddeer.swt.test.RedDeerTest;
 import org.jboss.reddeer.swt.util.Display;
@@ -45,32 +45,32 @@ public class MouseTest extends RedDeerTest {
 	private Label label2;
 
 	@Test
-	public void mouseClickTest() {
+	public void awtMouseClickTest() {
 		Rectangle rShell = getAbsoluteBounds(shell);
-		new DefaultMouse().click(rShell.x, rShell.y);
+		new AWTMouse().click(rShell.x, rShell.y);
 		new WaitUntil(new LabelHasText("Simple Click"));
 	}
 
 	@Test
-	public void mouseDoubleClickTest() {
+	public void awtMouseDoubleClickTest() {
 		Rectangle rShell = getAbsoluteBounds(shell);
-		new DefaultMouse().doubleClick(rShell.x, rShell.y);
+		new AWTMouse().doubleClick(rShell.x, rShell.y);
 		new WaitUntil(new LabelHasText("Double Click"));
 	}
 
 	@Test
-	public void mouseHoverTest() {
+	public void awtMouseHoverTest() {
 		Rectangle rLabel = getAbsoluteBounds(label);
-		new DefaultMouse().hover(rLabel.x, rLabel.y);
+		new AWTMouse().hover(rLabel.x, rLabel.y);
 		new WaitUntil(new LabelHasText("Hover"));
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
-	public void mouseDragAndDropTest() {
+	public void awtMouseDragAndDropTest() {
 		Rectangle r1 = getAbsoluteBounds(label1);
 		Rectangle r2 = getAbsoluteBounds(label2);
 		int c = 100;
-		new DefaultMouse().dragAndDrop(r1.x + c, r1.y + c, r2.x + c, r2.y + c);
+		new AWTMouse().dragAndDrop(r1.x + c, r1.y + c, r2.x + c, r2.y + c);
 		new WaitUntil(new LabelHasText("", 1));
 		new WaitUntil(new LabelHasText("Test", 2));
 	}
@@ -108,6 +108,7 @@ public class MouseTest extends RedDeerTest {
 
 			@Override
 			public void run() {
+
 				org.eclipse.swt.widgets.Display display = Display.getDisplay();
 				shell = new org.eclipse.swt.widgets.Shell(display);
 				shell.setText(SHELL_TITLE);
@@ -125,12 +126,10 @@ public class MouseTest extends RedDeerTest {
 
 					@Override
 					public void mouseExit(MouseEvent e) {
-						label.setText("Exit");
 					}
 
 					@Override
 					public void mouseEnter(MouseEvent e) {
-						label.setText("Enter");
 					}
 				});
 
@@ -140,58 +139,18 @@ public class MouseTest extends RedDeerTest {
 				label1.setLocation(100, 100);
 				setDragAndDrop(label1);
 
-				label1.addMouseListener(new MouseListener() {
-
-					@Override
-					public void mouseUp(MouseEvent e) {
-						System.out.println("mouseUp1");
-						System.out.println("\t" + e);
-					}
-
-					@Override
-					public void mouseDown(MouseEvent e) {
-						System.out.println("mouseDown1");
-						System.out.println("\t" + e);
-					}
-
-					@Override
-					public void mouseDoubleClick(MouseEvent e) {
-						System.out.println("mouseDoubleClick1");
-						System.out.println("\t" + e);
-					}
-				});
-
 				label2 = new Label(shell, SWT.BORDER);
 				label2.setText("");
 				label2.setSize(80, 30);
 				label2.setLocation(200, 100);
 				setDragAndDrop(label2);
 
-				label2.addMouseListener(new MouseListener() {
-
-					@Override
-					public void mouseUp(MouseEvent e) {
-						System.out.println("mouseUp2");
-						System.out.println("\t" + e);
-					}
-
-					@Override
-					public void mouseDown(MouseEvent e) {
-						System.out.println("mouseDown2");
-						System.out.println("\t" + e);
-					}
-
-					@Override
-					public void mouseDoubleClick(MouseEvent e) {
-						System.out.println("mouseDoubleClick2");
-						System.out.println("\t" + e);
-					}
-				});
 				shell.addMouseListener(new MouseListener() {
 
 					@Override
 					public void mouseUp(MouseEvent e) {
 						if (e.count == 1) {
+							System.out.println("***************** Clicked *********************");
 							label.setText("Simple Click");
 						}
 					}
@@ -205,6 +164,16 @@ public class MouseTest extends RedDeerTest {
 						label.setText("Double Click");
 					}
 				});
+
+				// for (int i = 1; i < 100; i++) {
+				// shell.addListener(i, new Listener() {
+				//
+				// @Override
+				// public void handleEvent(Event event) {
+				// System.out.println(event.getClass() + ": " + event);
+				// }
+				// });
+				// }
 
 				shell.open();
 			}
@@ -232,20 +201,14 @@ public class MouseTest extends RedDeerTest {
 		source.setTransfer(types);
 		source.addDragListener(new DragSourceListener() {
 			public void dragStart(DragSourceEvent event) {
-				System.out.println("dragStart");
-				debugEvent(event);
 				event.doit = (label.getText().length() != 0);
 			}
 
 			public void dragSetData(DragSourceEvent event) {
-				System.out.println("dragSetData");
-				debugEvent(event);
 				event.data = label.getText();
 			}
 
 			public void dragFinished(DragSourceEvent event) {
-				System.out.println("dragFinished");
-				debugEvent(event);
 				if (event.detail == DND.DROP_MOVE)
 					label.setText("");
 			}
@@ -264,12 +227,6 @@ public class MouseTest extends RedDeerTest {
 				label.setText((String) event.data);
 			}
 		});
-	}
-
-	private static void debugEvent(DragSourceEvent event) {
-		System.out.println("\t" + event);
-		System.out.println("\tx=" + event.x + ";y=" + event.y + ";ox=" + event.offsetX + ";oy"
-				+ event.offsetY + ";detail" + event.detail);
 	}
 
 	@After

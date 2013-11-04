@@ -1,15 +1,16 @@
 package org.jboss.reddeer.swt.impl.mouse;
 
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.event.InputEvent;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.jboss.reddeer.swt.api.Mouse;
 import org.jboss.reddeer.swt.util.Display;
 
 /**
+ * Default SWT implementation of mouse.
+ * 
+ * This implementation is not sometimes not working, use AWTMouse.
+ * 
+ * @see AWTMouse
  * 
  * @author apodhrad
  * 
@@ -22,18 +23,9 @@ public class DefaultMouse implements Mouse {
 
 			@Override
 			public void run() {
-				Event event = new Event();
-				event.x = x;
-				event.y = y;
-				event.count = 0;
-				event.button = 1;
-				event.type = SWT.MouseMove;
-				Display.getDisplay().post(event);
-				event.count = 1;
-				event.type = SWT.MouseDown;
-				Display.getDisplay().post(event);
-				event.type = SWT.MouseUp;
-				Display.getDisplay().post(event);
+				Display.getDisplay().post(mouseEvent(x, y, 0, 0, SWT.MouseMove));
+				Display.getDisplay().post(mouseEvent(x, y, 1, 1, SWT.MouseDown));
+				Display.getDisplay().post(mouseEvent(x, y, 1, 1, SWT.MouseUp));
 			}
 		});
 	}
@@ -41,30 +33,21 @@ public class DefaultMouse implements Mouse {
 	@Override
 	public void doubleClick(final int x, final int y) {
 		/*
-		 * Display.syncExec(new Runnable() {
-		 * 
-		 * @Override public void run() { Event event = new Event(); event.x = x;
-		 * event.y = y; event.count = 0; event.button = 1; event.type =
-		 * SWT.MouseMove; Display.getDisplay().post(event); event.count = 1;
-		 * event.type = SWT.MouseDown; Display.getDisplay().post(event);
-		 * event.type = SWT.MouseUp; Display.getDisplay().post(event);
-		 * event.type = SWT.MouseDown; event.count = 2;
-		 * Display.getDisplay().post(event); event.type = SWT.MouseDoubleClick;
-		 * Display.getDisplay().post(event); event.type = SWT.MouseUp;
-		 * Display.getDisplay().post(event); } });
+		 * Mac OS doesn't recognize double click by SWT events. The problem is
+		 * that event.count is still 1 on macosx.
 		 */
-		try {
-			Robot robot = new Robot();
-			robot.mouseMove(x, y);
-			robot.mousePress(InputEvent.BUTTON1_MASK);
-			robot.mouseRelease(InputEvent.BUTTON1_MASK);
-			robot.mousePress(InputEvent.BUTTON1_MASK);
-			robot.mouseRelease(InputEvent.BUTTON1_MASK);
-			robot.waitForIdle();
-		} catch (AWTException e) {
-			e.printStackTrace();
-		}
+		Display.syncExec(new Runnable() {
 
+			@Override
+			public void run() {
+				Display.getDisplay().post(mouseEvent(x, y, 0, 0, SWT.MouseMove));
+				Display.getDisplay().post(mouseEvent(x, y, 1, 1, SWT.MouseDown));
+				Display.getDisplay().post(mouseEvent(x, y, 1, 1, SWT.MouseUp));
+				Display.getDisplay().post(mouseEvent(x, y, 1, 2, SWT.MouseDown));
+				Display.getDisplay().post(mouseEvent(x, y, 1, 2, SWT.MouseDoubleClick));
+				Display.getDisplay().post(mouseEvent(x, y, 1, 2, SWT.MouseUp));
+			}
+		});
 	}
 
 	@Override
@@ -73,21 +56,8 @@ public class DefaultMouse implements Mouse {
 
 			@Override
 			public void run() {
-				Event move1 = new Event();
-				move1.x = 0;
-				move1.y = 0;
-				move1.type = SWT.MouseMove;
-				Display.getDisplay().post(move1);
-				Event move2 = new Event();
-				move2.x = x;
-				move2.y = y;
-				move2.type = SWT.MouseMove;
-				Display.getDisplay().post(move2);
-				Event hover = new Event();
-				hover.x = x;
-				hover.y = y;
-				hover.type = SWT.MouseHover;
-				Display.getDisplay().post(hover);
+				Display.getDisplay().post(mouseEvent(0, 0, 0, 0, SWT.MouseMove));
+				Display.getDisplay().post(mouseEvent(x, y, 0, 0, SWT.MouseMove));
 			}
 		});
 	}
@@ -95,5 +65,25 @@ public class DefaultMouse implements Mouse {
 	@Override
 	public void dragAndDrop(final int x1, final int y1, final int x2, final int y2) {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Create mouse event
+	 * 
+	 * @param x
+	 * @param y
+	 * @param button
+	 * @param count
+	 * @param type
+	 * @return mouse event
+	 */
+	private static Event mouseEvent(int x, int y, int button, int count, int type) {
+		Event event = new Event();
+		event.x = x;
+		event.y = y;
+		event.button = button;
+		event.count = count;
+		event.type = type;
+		return event;
 	}
 }
