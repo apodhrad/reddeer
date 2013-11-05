@@ -23,7 +23,7 @@ public class DefaultMouse implements Mouse {
 			new SWTMouse().doubleClick(x, y);
 			return;
 		} else {
-			new AWTMouse().click(x, y);
+			new AWTMouse().doubleClick(x, y);
 		}
 	}
 
