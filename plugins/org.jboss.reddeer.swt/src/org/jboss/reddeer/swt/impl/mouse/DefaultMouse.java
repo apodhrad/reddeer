@@ -28,11 +28,13 @@ public class DefaultMouse implements Mouse {
 
 			@Override
 			public void run() {
+				AbstractWait.sleep(300);
 				Display.getDisplay().post(mouseEvent(x, y, 0, 0, SWT.MouseMove));
 				AbstractWait.sleep(300);
 				Display.getDisplay().post(mouseEvent(x, y, 1, 1, SWT.MouseDown));
 				AbstractWait.sleep(300);
 				Display.getDisplay().post(mouseEvent(x, y, 1, 1, SWT.MouseUp));
+				AbstractWait.sleep(300);
 			}
 		});
 	}
@@ -51,6 +53,7 @@ public class DefaultMouse implements Mouse {
 
 			@Override
 			public void run() {
+				AbstractWait.sleep(300);
 				Display.getDisplay().post(mouseEvent(x, y, 0, 0, SWT.MouseMove));
 				AbstractWait.sleep(300);
 				Display.getDisplay().post(mouseEvent(x, y, 1, 1, SWT.MouseDown));
@@ -62,6 +65,7 @@ public class DefaultMouse implements Mouse {
 				Display.getDisplay().post(mouseEvent(x, y, 1, 2, SWT.MouseDoubleClick));
 				AbstractWait.sleep(300);
 				Display.getDisplay().post(mouseEvent(x, y, 1, 2, SWT.MouseUp));
+				AbstractWait.sleep(300);
 			}
 		});
 	}
@@ -72,11 +76,13 @@ public class DefaultMouse implements Mouse {
 
 			@Override
 			public void run() {
+				AbstractWait.sleep(300);
 				Display.getDisplay().post(mouseEvent(0, 0, 0, 0, SWT.MouseMove));
 				AbstractWait.sleep(300);
 				Display.getDisplay().post(mouseEvent(x, y, 0, 0, SWT.MouseMove));
 				AbstractWait.sleep(300);
 				Display.getDisplay().post(mouseEvent(x, y, 0, 0, SWT.MouseHover));
+				AbstractWait.sleep(300);
 			}
 		});
 	}
