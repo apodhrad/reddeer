@@ -205,14 +205,20 @@ public class GefEditor extends DefaultEditor {
 		// MouseUtils.click(centralPoint.x, centralPoint.y);
 		// MouseUtils.mouseMove(centralPoint.x, centralPoint.y);
 
-		try {
-			Robot robot = new Robot();
-			robot.mouseMove(centralPoint.x, centralPoint.y);
-			robot.delay(500);
-			robot.waitForIdle();
-		} catch (AWTException e) {
-			e.printStackTrace();
-		}
+		Display.syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					Robot robot = new Robot();
+					robot.mouseMove(centralPoint.x, centralPoint.y);
+					robot.delay(500);
+					robot.waitForIdle();
+				} catch (AWTException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		//
 		// IFigure parent = getFigureCanvas().getContents();
 		// List<IFigure> list = new FigureFinder().find(parent, new
@@ -233,17 +239,23 @@ public class GefEditor extends DefaultEditor {
 		// new MyMouseUtils(getFigureCanvas()).doubleClick(centralPoint.x,
 		// centralPoint.y);
 
-		try {
-			Robot robot = new Robot();
-			robot.mouseMove(centralPoint.x, centralPoint.y);
-			robot.mousePress(InputEvent.BUTTON1_MASK);
-			robot.mouseRelease(InputEvent.BUTTON1_MASK);
-			robot.mousePress(InputEvent.BUTTON1_MASK);
-			robot.mouseRelease(InputEvent.BUTTON1_MASK);
-			robot.waitForIdle();
-		} catch (AWTException e) {
-			e.printStackTrace();
-		}
+		Display.syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					Robot robot = new Robot();
+					robot.mouseMove(centralPoint.x, centralPoint.y);
+					robot.mousePress(InputEvent.BUTTON1_MASK);
+					robot.mouseRelease(InputEvent.BUTTON1_MASK);
+					robot.mousePress(InputEvent.BUTTON1_MASK);
+					robot.mouseRelease(InputEvent.BUTTON1_MASK);
+					robot.waitForIdle();
+				} catch (AWTException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
 		// Display.syncExec(new Runnable() {
 		//
@@ -331,14 +343,30 @@ public class GefEditor extends DefaultEditor {
 		});
 	}
 
-	public void click(int x, int y) {
-		Control control = viewer.getControl();
-		Rectangle rec = BoundsCalculation.getAbsoluteBounds(control);
+	public void click(final int x, final int y) {
+		final Rectangle rec = getAbsoluteBounds(viewer.getControl());
 		// MouseUtils.click(rec.x + x, rec.y + y);
 		List<EditPart> list = getEditParts(new All());
 		int oldCount = list.size();
 		// System.out.println("============= Mouse Click =================");
-		new MyMouseUtils(getFigureCanvas()).click(rec.x + x, rec.y + y);
+		// new MyMouseUtils(getFigureCanvas()).click(rec.x + x, rec.y + y);
+
+		Display.syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					Robot robot = new Robot();
+					robot.mouseMove(rec.x + x, rec.y + y);
+					robot.mousePress(InputEvent.BUTTON1_MASK);
+					robot.mouseRelease(InputEvent.BUTTON1_MASK);
+					robot.waitForIdle();
+				} catch (AWTException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
 		// System.out.println("===========================================");
 
 		// Display.syncExec(new Runnable() {

@@ -72,7 +72,7 @@ public class DiagramTest extends RedDeerTest {
 		new PushButton("OK").click();
 
 		editor.deleteEditPartWithLabel("foo");
-		
+
 		System.out.println();
 	}
 
