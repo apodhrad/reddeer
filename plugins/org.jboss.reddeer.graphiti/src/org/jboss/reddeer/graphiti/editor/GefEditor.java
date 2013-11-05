@@ -211,7 +211,7 @@ public class GefEditor extends DefaultEditor {
 			public void run() {
 				try {
 					Robot robot = new Robot();
-					robot.delay(1000);
+				    robot.setAutoWaitForIdle(true);
 					robot.mouseMove(centralPoint.x, centralPoint.y);
 					robot.delay(1000);
 					robot.waitForIdle();
@@ -246,7 +246,7 @@ public class GefEditor extends DefaultEditor {
 			public void run() {
 				try {
 					Robot robot = new Robot();
-					robot.delay(1000);
+				    robot.setAutoWaitForIdle(true);
 					robot.mouseMove(centralPoint.x, centralPoint.y);
 					robot.mousePress(InputEvent.BUTTON1_MASK);
 					robot.mouseRelease(InputEvent.BUTTON1_MASK);
@@ -359,7 +359,7 @@ public class GefEditor extends DefaultEditor {
 			public void run() {
 				try {
 					Robot robot = new Robot();
-					robot.delay(1000);
+				    robot.setAutoWaitForIdle(true);
 					robot.mouseMove(rec.x + x, rec.y + y);
 					robot.mousePress(InputEvent.BUTTON1_MASK);
 					robot.mouseRelease(InputEvent.BUTTON1_MASK);
