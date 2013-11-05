@@ -1,7 +1,5 @@
 package org.jboss.reddeer.graphiti.test;
 
-import static org.junit.Assert.fail;
-
 import org.eclipse.gef.EditPart;
 import org.eclipse.ui.part.EditorPart;
 import org.hamcrest.BaseMatcher;
@@ -19,55 +17,63 @@ import org.jboss.reddeer.swt.test.RedDeerTest;
 import org.junit.Test;
 
 public class DiagramTest extends RedDeerTest {
-	/*
-	 * @Test public void diagramTest() { new
-	 * GeneralProjectWizard().create("test");
-	 * 
-	 * new ProjectExplorer().open(); new
-	 * ProjectExplorer().getProject("test").select();
-	 * 
-	 * try { new TutorialDiagramWizard().create("Tutorial"); } catch
-	 * (SWTLayerException ex) { new DefaultShell("New").close(); new
-	 * TutorialDiagramWizard2().create("Tutorial"); }
-	 * 
-	 * GefEditor editor = new GefEditor("Tutorial");
-	 * 
-	 * editor.getPalette().activateTool("EClass", "Objects");
-	 * System.out.println("klik 1"); editor.click(5, 5); checkCount(editor, 1);
-	 * 
-	 * editor.getPalette().activateTool("EClass", "Objects");
-	 * System.out.println("klik 2"); editor.click(120, 5); checkCount(editor,
-	 * 2);
-	 * 
-	 * editor.getPalette().activateTool("EClass", "Objects");
-	 * System.out.println("klik 3"); editor.click(230, 5); checkCount(editor,
-	 * 3);
-	 * 
-	 * editor.getPalette().activateTool("EClass", "Objects");
-	 * System.out.println("klik 4"); editor.click(340, 5); checkCount(editor,
-	 * 4);
-	 * 
-	 * editor.getPalette().activateTool("EClass", "Objects");
-	 * System.out.println("klik 5"); editor.click(5, 120); checkCount(editor,
-	 * 5);
-	 * 
-	 * editor.getPalette().activateTool("EClass", "Objects");
-	 * System.out.println("klik 6"); editor.click(120, 120); checkCount(editor,
-	 * 6);
-	 * 
-	 * EditPart editPart = editor.getEditParts(new IsSelectable()).get(0);
-	 * editor.doubleClick(editPart);
-	 * 
-	 * new DefaultShell("Rename EClass"); new DefaultText(0).setText("foo"); new
-	 * PushButton("OK").click();
-	 * 
-	 * System.out.println(); }
-	 */
 
 	@Test
-	public void foo() {
-		Snippet324.main(new String[] {});
-		fail("foo");
+	public void diagramTest() {
+		new GeneralProjectWizard().create("test");
+
+		new ProjectExplorer().open();
+		new ProjectExplorer().getProject("test").select();
+
+		try {
+			new TutorialDiagramWizard().create("Tutorial");
+		} catch (SWTLayerException ex) {
+			new DefaultShell("New").close();
+			new TutorialDiagramWizard2().create("Tutorial");
+		}
+
+		GefEditor editor = new GefEditor("Tutorial");
+
+		editor.getPalette().activateTool("EClass", "Objects");
+		System.out.println("klik 1");
+		editor.click(5, 5);
+		checkCount(editor, 1);
+
+		editor.getPalette().activateTool("EClass", "Objects");
+		System.out.println("klik 2");
+		editor.click(120, 5);
+		checkCount(editor, 2);
+
+		editor.getPalette().activateTool("EClass", "Objects");
+		System.out.println("klik 3");
+		editor.click(230, 5);
+		checkCount(editor, 3);
+
+		editor.getPalette().activateTool("EClass", "Objects");
+		System.out.println("klik 4");
+		editor.click(340, 5);
+		checkCount(editor, 4);
+
+		editor.getPalette().activateTool("EClass", "Objects");
+		System.out.println("klik 5");
+		editor.click(5, 120);
+		checkCount(editor, 5);
+
+		editor.getPalette().activateTool("EClass", "Objects");
+		System.out.println("klik 6");
+		editor.click(120, 120);
+		checkCount(editor, 6);
+
+		EditPart editPart = editor.getEditParts(new IsSelectable()).get(0);
+		editor.doubleClick(editPart);
+
+		new DefaultShell("Rename EClass");
+		new DefaultText(0).setText("foo");
+		new PushButton("OK").click();
+
+		editor.deleteEditPartWithLabel("foo");
+		
+		System.out.println();
 	}
 
 	public void checkCount(GefEditor editor, int expectedCount) {

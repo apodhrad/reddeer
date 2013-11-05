@@ -1,8 +1,10 @@
 package org.jboss.reddeer.graphiti.editor;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.InputEvent;
 import java.util.List;
 
-import org.eclipse.draw2d.Clickable;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -17,7 +19,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -25,7 +26,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.hamcrest.Matcher;
-import org.hamcrest.core.IsInstanceOf;
 import org.jboss.reddeer.graphiti.condition.NewEditPartDetected;
 import org.jboss.reddeer.graphiti.finder.EditPartFinder;
 import org.jboss.reddeer.graphiti.finder.FigureFinder;
@@ -33,7 +33,6 @@ import org.jboss.reddeer.graphiti.matcher.All;
 import org.jboss.reddeer.graphiti.matcher.WithLabel;
 import org.jboss.reddeer.graphiti.matcher.WithTooltip;
 import org.jboss.reddeer.graphiti.utils.BoundsCalculation;
-import org.jboss.reddeer.graphiti.utils.MouseUtils;
 import org.jboss.reddeer.swt.condition.JobIsRunning;
 import org.jboss.reddeer.swt.condition.ShellWithTextIsActive;
 import org.jboss.reddeer.swt.impl.button.PushButton;
@@ -189,28 +188,39 @@ public class GefEditor extends DefaultEditor {
 		});
 	}
 
-	protected void hover(final EditPart editPart) {
+	public void hover(final EditPart editPart) {
 		hover(getFigure(editPart));
 	}
 
-	protected void hover(final IFigure figure) {
+	public void hover(final IFigure figure) {
 		hover(figure, 1);
 	}
 
 	protected void hover(final IFigure figure, int count) {
-		if (count > 10) {
-			throw new RuntimeException("Hover doesn't show any context button!");
-		}
+		// if (count > 10) {
+		// throw new RuntimeException("Hover doesn't show any context button!");
+		// }
 		Rectangle rec = BoundsCalculation.getAbsoluteBounds(getFigureCanvas(), figure);
 		final Point centralPoint = BoundsCalculation.getCentralPoint(rec);
-		MouseUtils.click(centralPoint.x, centralPoint.y);
-		MouseUtils.mouseMove(centralPoint.x, centralPoint.y);
+		// MouseUtils.click(centralPoint.x, centralPoint.y);
+		// MouseUtils.mouseMove(centralPoint.x, centralPoint.y);
 
-		IFigure parent = getFigureCanvas().getContents();
-		List<IFigure> list = new FigureFinder().find(parent, new IsInstanceOf(Clickable.class));
-		if (list.isEmpty()) {
-			hover(figure, count + 1);
+		try {
+			Robot robot = new Robot();
+			robot.mouseMove(centralPoint.x, centralPoint.y);
+			robot.delay(500);
+			robot.waitForIdle();
+		} catch (AWTException e) {
+			e.printStackTrace();
 		}
+		//
+		// IFigure parent = getFigureCanvas().getContents();
+		// List<IFigure> list = new FigureFinder().find(parent, new
+		// IsInstanceOf(Clickable.class));
+		// if (list.isEmpty()) {
+		// hover(figure, count + 1);
+		// }
+
 	}
 
 	public void doubleClick(EditPart editPart) {
@@ -220,7 +230,21 @@ public class GefEditor extends DefaultEditor {
 	public void doubleClick(IFigure figure) {
 		Rectangle rec = BoundsCalculation.getAbsoluteBounds(getFigureCanvas(), figure);
 		final Point centralPoint = BoundsCalculation.getCentralPoint(rec);
-		new MyMouseUtils(getFigureCanvas()).doubleClick(centralPoint.x, centralPoint.y);
+		// new MyMouseUtils(getFigureCanvas()).doubleClick(centralPoint.x,
+		// centralPoint.y);
+
+		try {
+			Robot robot = new Robot();
+			robot.mouseMove(centralPoint.x, centralPoint.y);
+			robot.mousePress(InputEvent.BUTTON1_MASK);
+			robot.mouseRelease(InputEvent.BUTTON1_MASK);
+			robot.mousePress(InputEvent.BUTTON1_MASK);
+			robot.mouseRelease(InputEvent.BUTTON1_MASK);
+			robot.waitForIdle();
+		} catch (AWTException e) {
+			e.printStackTrace();
+		}
+
 		// Display.syncExec(new Runnable() {
 		//
 		// @Override
@@ -293,6 +317,18 @@ public class GefEditor extends DefaultEditor {
 	public Palette getPalette() {
 		PaletteViewer paletteViewer = viewer.getEditDomain().getPaletteViewer();
 		return new Palette(paletteViewer);
+	}
+
+	public static Rectangle getAbsoluteBounds(final Control control) {
+		return Display.syncExec(new ResultRunnable<Rectangle>() {
+
+			@Override
+			public Rectangle run() {
+				Point p = control.toDisplay(0, 0);
+				Rectangle r = control.getBounds();
+				return new Rectangle(p.x, p.y, r.width, r.height);
+			}
+		});
 	}
 
 	public void click(int x, int y) {
