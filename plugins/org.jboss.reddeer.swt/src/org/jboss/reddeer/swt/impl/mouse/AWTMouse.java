@@ -8,7 +8,7 @@ import org.jboss.reddeer.swt.api.Mouse;
 import org.jboss.reddeer.swt.exception.SWTLayerException;
 
 /**
- * AWT implementation of mouse
+ * AWT mouse implementation.
  * 
  * @author apodhrad
  * 
