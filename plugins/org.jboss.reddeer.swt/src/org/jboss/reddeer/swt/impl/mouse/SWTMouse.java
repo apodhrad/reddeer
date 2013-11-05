@@ -31,6 +31,7 @@ public class SWTMouse implements Mouse {
 				AbstractWait.sleep(300);
 			}
 		});
+		waitForIdle();
 	}
 
 	@Override
@@ -54,6 +55,7 @@ public class SWTMouse implements Mouse {
 				AbstractWait.sleep(300);
 			}
 		});
+		waitForIdle();
 	}
 
 	@Override
@@ -71,6 +73,7 @@ public class SWTMouse implements Mouse {
 				AbstractWait.sleep(300);
 			}
 		});
+		waitForIdle();
 	}
 
 	@Override
@@ -99,25 +102,27 @@ public class SWTMouse implements Mouse {
 	}
 
 	public static void waitForIdle() {
-		Display.syncExec(new Runnable() {
+		try {
+			Display.syncExec(new Runnable() {
 
-			@Override
-			public void run() {
-				new WaitUntil(new WaitCondition() {
+				@Override
+				public void run() {
+					new WaitUntil(new WaitCondition() {
 
-					@Override
-					public boolean test() {
+						@Override
+						public boolean test() {
+							return Display.getDisplay().readAndDispatch();
+						}
 
-						return Display.getDisplay().readAndDispatch();
-					}
-
-					@Override
-					public String description() {
-						return null;
-					}
-				});
-				Display.getDisplay().update();
-			}
-		});
+						@Override
+						public String description() {
+							return null;
+						}
+					});
+				}
+			});
+		} catch (Exception e) {
+			// ignore this exception
+		}
 	}
 }
