@@ -34,35 +34,12 @@ public class DiagramTest extends RedDeerTest {
 
 		GefEditor editor = new GefEditor("Tutorial");
 
-		editor.getPalette().activateTool("EClass", "Objects");
-		System.out.println("klik 1");
-		editor.click(5, 5);
-		checkCount(editor, 1);
-
-		editor.getPalette().activateTool("EClass", "Objects");
-		System.out.println("klik 2");
-		editor.click(120, 5);
-		checkCount(editor, 2);
-
-		editor.getPalette().activateTool("EClass", "Objects");
-		System.out.println("klik 3");
-		editor.click(230, 5);
-		checkCount(editor, 3);
-
-		editor.getPalette().activateTool("EClass", "Objects");
-		System.out.println("klik 4");
-		editor.click(340, 5);
-		checkCount(editor, 4);
-
-		editor.getPalette().activateTool("EClass", "Objects");
-		System.out.println("klik 5");
-		editor.click(5, 120);
-		checkCount(editor, 5);
-
-		editor.getPalette().activateTool("EClass", "Objects");
-		System.out.println("klik 6");
-		editor.click(120, 120);
-		checkCount(editor, 6);
+		editor.addToolFromPalette("EClass", "Objects", 5, 5);
+		editor.addToolFromPalette("EClass", "Objects", 120, 5);
+		editor.addToolFromPalette("EClass", "Objects", 230, 5);
+		editor.addToolFromPalette("EClass", "Objects", 340, 5);
+		editor.addToolFromPalette("EClass", "Objects", 5, 120);
+		editor.addToolFromPalette("EClass", "Objects", 120, 120);
 
 		EditPart editPart = editor.getEditParts(new IsSelectable()).get(0);
 		editor.doubleClick(editPart);
@@ -74,12 +51,6 @@ public class DiagramTest extends RedDeerTest {
 		editor.deleteEditPartWithLabel("foo");
 
 		System.out.println();
-	}
-
-	public void checkCount(GefEditor editor, int expectedCount) {
-		int count = editor.getEditParts(new IsSelectable()).size();
-		System.out.println();
-		// assertEquals(expectedCount, count);
 	}
 
 	public class IsSelectable extends BaseMatcher<EditorPart> {

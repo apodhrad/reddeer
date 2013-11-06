@@ -35,7 +35,9 @@ import org.jboss.reddeer.graphiti.matcher.WithTooltip;
 import org.jboss.reddeer.graphiti.utils.BoundsCalculation;
 import org.jboss.reddeer.swt.condition.JobIsRunning;
 import org.jboss.reddeer.swt.condition.ShellWithTextIsActive;
+import org.jboss.reddeer.swt.handler.WidgetHandler;
 import org.jboss.reddeer.swt.impl.button.PushButton;
+import org.jboss.reddeer.swt.lookup.WidgetLookup;
 import org.jboss.reddeer.swt.util.Display;
 import org.jboss.reddeer.swt.util.ResultRunnable;
 import org.jboss.reddeer.swt.wait.WaitUntil;
@@ -211,7 +213,7 @@ public class GefEditor extends DefaultEditor {
 			public void run() {
 				try {
 					Robot robot = new Robot();
-				    robot.setAutoWaitForIdle(true);
+					robot.setAutoWaitForIdle(true);
 					robot.mouseMove(centralPoint.x, centralPoint.y);
 					robot.delay(1000);
 					robot.waitForIdle();
@@ -246,7 +248,7 @@ public class GefEditor extends DefaultEditor {
 			public void run() {
 				try {
 					Robot robot = new Robot();
-				    robot.setAutoWaitForIdle(true);
+					robot.setAutoWaitForIdle(true);
 					robot.mouseMove(centralPoint.x, centralPoint.y);
 					robot.mousePress(InputEvent.BUTTON1_MASK);
 					robot.mouseRelease(InputEvent.BUTTON1_MASK);
@@ -345,21 +347,24 @@ public class GefEditor extends DefaultEditor {
 		});
 	}
 
-	public void click(final int x, final int y) {
-		final Rectangle rec = getAbsoluteBounds(viewer.getControl());
-		// MouseUtils.click(rec.x + x, rec.y + y);
+	public void addToolFromPalette(String tool, final int x, final int y) {
+		addToolFromPalette(tool, null, x, y);
+	}
+
+	public void addToolFromPalette(String tool, String container, final int x, final int y) {
+		getPalette().activateTool(tool, container);
+
 		List<EditPart> list = getEditParts(new All());
 		int oldCount = list.size();
-		// System.out.println("============= Mouse Click =================");
-		// new MyMouseUtils(getFigureCanvas()).click(rec.x + x, rec.y + y);
 
+		final Rectangle rec = getAbsoluteBounds(viewer.getControl());
 		Display.syncExec(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
 					Robot robot = new Robot();
-				    robot.setAutoWaitForIdle(true);
+					robot.setAutoWaitForIdle(true);
 					robot.mouseMove(rec.x + x, rec.y + y);
 					robot.mousePress(InputEvent.BUTTON1_MASK);
 					robot.mouseRelease(InputEvent.BUTTON1_MASK);
@@ -369,23 +374,32 @@ public class GefEditor extends DefaultEditor {
 				}
 			}
 		});
+		WidgetLookup.getInstance().sendClickNotifications(viewer.getControl());
 
-		// System.out.println("===========================================");
-
-		// Display.syncExec(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		//
-		// }
-		// });
-		// AbstractWait.sleep(5 * 1000);
-		// try {
 		new WaitUntil(new NewEditPartDetected(this, oldCount));
-		// } catch (Exception ex) {
-		// System.out.println();
-		// }
 	}
+
+	// public void click(final int x, final int y) {
+	// final Rectangle rec = getAbsoluteBounds(viewer.getControl());
+	// // MouseUtils.click(rec.x + x, rec.y + y);
+	// // System.out.println("============= Mouse Click =================");
+	// // new MyMouseUtils(getFigureCanvas()).click(rec.x + x, rec.y + y);
+	//
+	// // System.out.println("===========================================");
+	//
+	// // Display.syncExec(new Runnable() {
+	// //
+	// // @Override
+	// // public void run() {
+	// //
+	// // }
+	// // });
+	// // AbstractWait.sleep(5 * 1000);
+	// // try {
+	// // } catch (Exception ex) {
+	// // System.out.println();
+	// // }
+	// }
 
 	public static class MyMouseUtils {
 
