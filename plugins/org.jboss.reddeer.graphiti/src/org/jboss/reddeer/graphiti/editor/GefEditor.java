@@ -35,9 +35,7 @@ import org.jboss.reddeer.graphiti.matcher.WithTooltip;
 import org.jboss.reddeer.graphiti.utils.BoundsCalculation;
 import org.jboss.reddeer.swt.condition.JobIsRunning;
 import org.jboss.reddeer.swt.condition.ShellWithTextIsActive;
-import org.jboss.reddeer.swt.handler.WidgetHandler;
 import org.jboss.reddeer.swt.impl.button.PushButton;
-import org.jboss.reddeer.swt.lookup.WidgetLookup;
 import org.jboss.reddeer.swt.util.Display;
 import org.jboss.reddeer.swt.util.ResultRunnable;
 import org.jboss.reddeer.swt.wait.WaitUntil;
@@ -352,8 +350,10 @@ public class GefEditor extends DefaultEditor {
 	}
 
 	public void addToolFromPalette(String tool, String container, final int x, final int y) {
+		save();
+		
 		getPalette().activateTool(tool, container);
-
+		
 		List<EditPart> list = getEditParts(new All());
 		int oldCount = list.size();
 
@@ -363,8 +363,9 @@ public class GefEditor extends DefaultEditor {
 			@Override
 			public void run() {
 				try {
+					viewer.getControl().forceFocus();
+					
 					Robot robot = new Robot();
-					robot.setAutoWaitForIdle(true);
 					robot.mouseMove(rec.x + x, rec.y + y);
 					robot.mousePress(InputEvent.BUTTON1_MASK);
 					robot.mouseRelease(InputEvent.BUTTON1_MASK);
@@ -374,7 +375,6 @@ public class GefEditor extends DefaultEditor {
 				}
 			}
 		});
-		WidgetLookup.getInstance().sendClickNotifications(viewer.getControl());
 
 		new WaitUntil(new NewEditPartDetected(this, oldCount));
 	}
