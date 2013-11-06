@@ -350,21 +350,38 @@ public class GefEditor extends DefaultEditor {
 	}
 
 	public void addToolFromPalette(String tool, String container, final int x, final int y) {
-		save();
-		
-		getPalette().activateTool(tool, container);
-		
-		List<EditPart> list = getEditParts(new All());
-		int oldCount = list.size();
-
 		final Rectangle rec = getAbsoluteBounds(viewer.getControl());
+
 		Display.syncExec(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
 					viewer.getControl().forceFocus();
-					
+
+					Robot robot = new Robot();
+					robot.mouseMove(rec.x, rec.y);
+					robot.mousePress(InputEvent.BUTTON1_MASK);
+					robot.mouseRelease(InputEvent.BUTTON1_MASK);
+					robot.waitForIdle();
+				} catch (AWTException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		getPalette().activateTool(tool, container);
+
+		List<EditPart> list = getEditParts(new All());
+		int oldCount = list.size();
+
+		Display.syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					viewer.getControl().forceFocus();
+
 					Robot robot = new Robot();
 					robot.mouseMove(rec.x + x, rec.y + y);
 					robot.mousePress(InputEvent.BUTTON1_MASK);
