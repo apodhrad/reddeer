@@ -33,6 +33,7 @@ import org.jboss.reddeer.graphiti.matcher.All;
 import org.jboss.reddeer.graphiti.matcher.WithLabel;
 import org.jboss.reddeer.graphiti.matcher.WithTooltip;
 import org.jboss.reddeer.graphiti.utils.BoundsCalculation;
+import org.jboss.reddeer.graphiti.view.PaletteView;
 import org.jboss.reddeer.swt.condition.JobIsRunning;
 import org.jboss.reddeer.swt.condition.ShellWithTextIsActive;
 import org.jboss.reddeer.swt.impl.button.PushButton;
@@ -178,7 +179,7 @@ public class GefEditor extends DefaultEditor {
 		return list.get(index);
 	}
 
-	protected void select(final EditPart editPart) {
+	public void select(final EditPart editPart) {
 		Display.syncExec(new Runnable() {
 
 			@Override
@@ -329,6 +330,7 @@ public class GefEditor extends DefaultEditor {
 	}
 
 	public Palette getPalette() {
+		new PaletteView().open();
 		PaletteViewer paletteViewer = viewer.getEditDomain().getPaletteViewer();
 		return new Palette(paletteViewer);
 	}

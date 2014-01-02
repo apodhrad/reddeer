@@ -1,12 +1,17 @@
 package org.jboss.reddeer.graphiti.test;
 
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.requests.LocationRequest;
 import org.eclipse.ui.part.EditorPart;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.jboss.reddeer.eclipse.jdt.ui.ProjectExplorer;
 import org.jboss.reddeer.eclipse.jface.wizard.NewWizardDialog;
+import org.jboss.reddeer.eclipse.ui.problems.ProblemsView;
 import org.jboss.reddeer.graphiti.editor.GefEditor;
+import org.jboss.reddeer.graphiti.matcher.All;
 import org.jboss.reddeer.swt.exception.SWTLayerException;
 import org.jboss.reddeer.swt.impl.button.PushButton;
 import org.jboss.reddeer.swt.impl.combo.DefaultCombo;
@@ -33,7 +38,7 @@ public class DiagramTest extends RedDeerTest {
 		}
 
 		GefEditor editor = new GefEditor("Tutorial");
-
+		
 		editor.addToolFromPalette("EClass", "Objects", 5, 5);
 		editor.addToolFromPalette("EClass", "Objects", 120, 5);
 		editor.addToolFromPalette("EClass", "Objects", 230, 5);
@@ -41,7 +46,22 @@ public class DiagramTest extends RedDeerTest {
 		editor.addToolFromPalette("EClass", "Objects", 5, 120);
 		editor.addToolFromPalette("EClass", "Objects", 120, 120);
 
+		System.out.println("Number of edit parts: " + editor.getEditParts(new IsSelectable()).size());
 		EditPart editPart = editor.getEditParts(new IsSelectable()).get(0);
+		
+//		editPart.performRequest(RequestConstants.REQ_OPEN);
+		
+		editor.select(editPart);
+		
+		// debug
+		editor.getEditParts(new All());
+		
+		Request request = new Request();
+		request.setType(RequestConstants.REQ_OPEN);
+		editPart.performRequest(request);
+		
+		editPart.getChildren();
+		
 		editor.doubleClick(editPart);
 
 		new DefaultShell("Rename EClass");

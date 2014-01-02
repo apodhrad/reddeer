@@ -8,6 +8,7 @@ public class All extends BaseMatcher<IFigure> {
 
 	@Override
 	public boolean matches(Object obj) {
+		System.out.println(obj);
 		return true;
 	}
 

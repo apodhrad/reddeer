@@ -16,6 +16,7 @@ import org.jboss.reddeer.graphiti.condition.IsToolActivated;
 import org.jboss.reddeer.graphiti.finder.EditPartFinder;
 import org.jboss.reddeer.graphiti.finder.PaletteEntryFinder;
 import org.jboss.reddeer.graphiti.utils.PrintInfo;
+import org.jboss.reddeer.graphiti.view.PaletteView;
 import org.jboss.reddeer.swt.util.Display;
 import org.jboss.reddeer.swt.util.ResultRunnable;
 import org.jboss.reddeer.swt.wait.WaitUntil;
@@ -31,6 +32,9 @@ public class Palette {
 	private PaletteViewer paletteViewer;
 
 	public Palette(final PaletteViewer paletteViewer) {
+		if(paletteViewer == null) {
+			throw new IllegalArgumentException("Cannot create palette from null!");
+		}
 		this.paletteViewer = paletteViewer;
 		// Display.syncExec(new Runnable() {
 		//
@@ -85,6 +89,7 @@ public class Palette {
 	}
 
 	public List<PaletteEntry> getPaletteEntries(final Matcher<PaletteEntry> matcher) {
+		new PaletteView().open();
 		return Display.syncExec(new ResultRunnable<List<PaletteEntry>>() {
 			@Override
 			public List<PaletteEntry> run() {
