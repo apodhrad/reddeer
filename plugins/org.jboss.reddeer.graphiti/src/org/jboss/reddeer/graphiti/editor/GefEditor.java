@@ -20,11 +20,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.hamcrest.Matcher;
 import org.jboss.reddeer.graphiti.condition.NewEditPartDetected;
 import org.jboss.reddeer.graphiti.finder.EditPartFinder;
@@ -62,25 +57,25 @@ public class GefEditor extends DefaultEditor {
 		init();
 	}
 
-	@Override
-	protected IWorkbenchPart getPartByTitle(final String title) {
-		return Display.syncExec(new ResultRunnable<IEditorPart>() {
-
-			@Override
-			public IEditorPart run() {
-				IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow();
-				IEditorReference[] editors = activeWorkbenchWindow.getActivePage()
-						.getEditorReferences();
-				for (IEditorReference iEditorReference : editors) {
-					if (iEditorReference.getTitle().equals(title)) {
-						return iEditorReference.getEditor(false);
-					}
-				}
-				return null;
-			}
-		});
-	}
+//	@Override
+//	protected IWorkbenchPart getPartByTitle(final String title) {
+//		return Display.syncExec(new ResultRunnable<IEditorPart>() {
+//
+//			@Override
+//			public IEditorPart run() {
+//				IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench()
+//						.getActiveWorkbenchWindow();
+//				IEditorReference[] editors = activeWorkbenchWindow.getActivePage()
+//						.getEditorReferences();
+//				for (IEditorReference iEditorReference : editors) {
+//					if (iEditorReference.getTitle().equals(title)) {
+//						return iEditorReference.getEditor(false);
+//					}
+//				}
+//				return null;
+//			}
+//		});
+//	}
 
 	private void init() {
 		viewer = Display.syncExec(new ResultRunnable<GraphicalViewer>() {
