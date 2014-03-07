@@ -18,7 +18,7 @@ import org.jboss.reddeer.swt.api.StyledText;
 import org.jboss.reddeer.swt.impl.menu.ShellMenu;
 import org.jboss.reddeer.swt.impl.styledtext.DefaultStyledText;
 import org.jboss.reddeer.swt.impl.toolbar.DefaultToolItem;
-import org.jboss.reddeer.swt.matcher.RegexMatchers;
+import org.jboss.reddeer.swt.matcher.WithRegexMatchers;
 import org.jboss.reddeer.swt.test.RedDeerTest;
 import org.jboss.reddeer.swt.wait.AbstractWait;
 import org.jboss.reddeer.workbench.editor.DefaultEditor;
@@ -160,7 +160,7 @@ public class ConsoleViewTest extends RedDeerTest{
 	
 	private static void runTestClass(String name) {
 		new PackageExplorer().getProject(TEST_PROJECT_NAME).getProjectItem("src", "test", name + ".java").select();
-		RegexMatchers m = new RegexMatchers("Run.*", "Run As.*", ".*Java Application.*");
+		WithRegexMatchers m = new WithRegexMatchers("Run.*", "Run As.*", ".*Java Application.*");
 		new ShellMenu(m.getMatchers()).select();		
 	}
 }
