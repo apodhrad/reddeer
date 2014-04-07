@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Shell;
 import org.jboss.reddeer.junit.extensionpoint.IAfterTest;
+import org.jboss.reddeer.junit.internal.screenshot.CaptureScreenshot;
+import org.jboss.reddeer.junit.internal.screenshot.CaptureScreenshotException;
 import org.jboss.reddeer.junit.logging.Logger;
 import org.jboss.reddeer.swt.handler.WidgetHandler;
 import org.jboss.reddeer.swt.impl.shell.WorkbenchShell;
@@ -65,7 +67,13 @@ public class CloseAllShellsExt implements IAfterTest {
 		@Override
 		protected void beforeShellIsClosed(Shell shell) {
 			super.beforeShellIsClosed(shell);
-			shellTitles.add(WidgetHandler.getInstance().getText(shell));
+			String shellTitle = WidgetHandler.getInstance().getText(shell); 
+			shellTitles.add(shellTitle);
+			try {
+				new CaptureScreenshot().captureScreenshot("openShell-" + shellTitle);
+			} catch (CaptureScreenshotException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
