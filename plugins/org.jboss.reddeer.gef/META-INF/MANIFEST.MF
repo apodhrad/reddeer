@@ -20,5 +20,6 @@ Export-Package: org.jboss.reddeer.gef,
  org.jboss.reddeer.gef.editor,
  org.jboss.reddeer.gef.impl.editpart,
  org.jboss.reddeer.gef.impl.palette,
+ org.jboss.reddeer.gef.lookup,
  org.jboss.reddeer.gef.util,
  org.jboss.reddeer.gef.view
