@@ -29,6 +29,7 @@
 	</properties>
 	
 	<modules>
+		<module>org.jboss.reddeer.direct.test</module>
 		<module>org.jboss.reddeer.swt.test</module>
 		<module>org.jboss.reddeer.workbench.test</module>
 		<module>org.jboss.reddeer.uiforms.test</module>
