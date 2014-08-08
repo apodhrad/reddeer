@@ -152,7 +152,7 @@ public class ShellTest {
 			shell1.close();
 		}
 		if (shell2 != null){
-			shell2.close();
+//			shell2.close();
 		}
 	}
 	
