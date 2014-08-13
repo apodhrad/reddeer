@@ -5,9 +5,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.IConsoleManager;
+import org.eclipse.ui.console.IOConsole;
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsNull;
 import org.jboss.reddeer.eclipse.condition.ConsoleHasNoChange;
+import org.jboss.reddeer.eclipse.condition.ConsoleHasText;
 import org.jboss.reddeer.eclipse.jdt.ui.NewJavaClassWizardDialog;
 import org.jboss.reddeer.eclipse.jdt.ui.NewJavaClassWizardPage;
 import org.jboss.reddeer.eclipse.jdt.ui.ide.NewJavaProjectWizardDialog;
@@ -19,10 +26,12 @@ import org.jboss.reddeer.junit.runner.RedDeerSuite;
 import org.jboss.reddeer.requirements.openperspective.OpenPerspectiveRequirement.OpenPerspective;
 import org.jboss.reddeer.swt.api.StyledText;
 import org.jboss.reddeer.swt.impl.menu.ShellMenu;
+import org.jboss.reddeer.swt.impl.shell.WorkbenchShell;
 import org.jboss.reddeer.swt.impl.styledtext.DefaultStyledText;
 import org.jboss.reddeer.swt.impl.toolbar.ViewToolItem;
 import org.jboss.reddeer.swt.matcher.RegexMatcher;
 import org.jboss.reddeer.swt.matcher.WithTextMatchers;
+import org.jboss.reddeer.swt.util.Display;
 import org.jboss.reddeer.swt.wait.AbstractWait;
 import org.jboss.reddeer.swt.wait.TimePeriod;
 import org.jboss.reddeer.swt.wait.WaitUntil;
@@ -46,6 +55,7 @@ public class ConsoleViewTest {
 
 	@BeforeClass
 	public static void setupClass() {
+		new WorkbenchShell().maximize();
 		createTestProject();
 	}
 
@@ -59,13 +69,13 @@ public class ConsoleViewTest {
 		runTestClass(TEST_CLASS_NAME);
 	}
 
-	@Test
+//	@Test
 	public void testConsoleView() {
 		testGettingConsoleTest();
 		testClearConsole();
 	}
 
-	@Test
+//	@Test
 	public void testRemoveLaunch() {
 		consoleView = new ConsoleView();
 		consoleView.open();
@@ -81,7 +91,7 @@ public class ConsoleViewTest {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testRemoveAllTerminatedLaunches() {
 		consoleView = new ConsoleView();
 		consoleView.open();
@@ -97,7 +107,7 @@ public class ConsoleViewTest {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testTerminateConsole() {
 
 		runTestClass(TEST_CLASS_LOOP_NAME);
@@ -118,7 +128,7 @@ public class ConsoleViewTest {
 
 	}
 
-	@Test
+//	@Test
 	public void consoleHasNoChangeTest() {
 		runTestClass(TEST_CLASS_LOOP2_NAME);
 		new WaitUntil(new ConsoleHasNoChange(TimePeriod.getCustom(11)), TimePeriod.LONG);
@@ -126,6 +136,42 @@ public class ConsoleViewTest {
 		consoleView.open();
 		consoleView.terminateConsole();
 		assertEquals("Start\nHello Application\n", consoleView.getConsoleText());
+	}
+	
+	@Test
+	public void consoleProcessTest() {
+		runTestClass(TEST_CLASS_LOOP2_NAME);
+		new WaitUntil(new ConsoleHasText("Start"));
+		foo();
+		new WaitUntil(new ConsoleHasNoChange(TimePeriod.getCustom(11)), TimePeriod.LONG);
+		consoleView = new ConsoleView();
+		consoleView.open();
+		consoleView.terminateConsole();
+		foo();
+		assertEquals("Start\nHello Application\n", consoleView.getConsoleText());
+	}
+	
+	private static void foo() {
+		Display.getDisplay().syncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				Job[] jobs = Job.getJobManager().find(null);
+				IConsoleManager consoleManager = ConsolePlugin.getDefault().getConsoleManager();
+				IConsole[] consoles = consoleManager.getConsoles();
+				for (IConsole console: consoles) {
+					System.out.println(console.getClass().getCanonicalName());
+					System.out.println(console.getName());
+					System.out.println(console.getType());
+					if(console instanceof IOConsole) {
+						IOConsole ioConsole = (IOConsole) console;
+						ISchedulingRule rule = ioConsole.getSchedulingRule();
+						System.out.println(rule.getClass().getCanonicalName());
+					}
+				}
+				System.out.println();	
+			}
+		});
 	}
 
 	private void testGettingConsoleTest() {
