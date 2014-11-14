@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="RedDeer Action Set"
+            visible="true"
+            id="org.jboss.reddeer.actionSet">
+         <menu
+               label="RedDeer"
+               id="reddeerMenu">
+            <separator
+                  name="reddeerGroup">
+            </separator>
+         </menu>
+         <action
+               label="Code Generator"
+               menubarPath="reddeerMenu/reddeerGroup"
+               class="org.jboss.reddeer.generator.actions.CodeGeneratorAction"
+               id="org.jboss.reddeer.generator.actions.CodeGeneratorAction">
+         </action>
+      </actionSet>
+   </extension>
+
+</plugin>
