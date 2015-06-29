@@ -46,6 +46,17 @@
 
 	<repositories>
 	  <repository>
+	    <id>orbit</id>
+	    <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/</url>
+	    <layout>p2</layout>
+	    <snapshots>
+	      <enabled>true</enabled>
+	    </snapshots>
+	    <releases>
+	      <enabled>true</enabled>
+	    </releases>
+	  </repository>
+	  <repository>
 	    <id>tycho-connector</id>
 	    <url>http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.8.0/N/LATEST/</url>
 	    <layout>p2</layout>
