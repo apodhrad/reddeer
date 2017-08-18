@@ -15,52 +15,40 @@ import java.util.List;
 
 import org.eclipse.reddeer.junit.internal.requirement.Requirements;
 import org.eclipse.reddeer.junit.screenshot.ScreenshotCapturer;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.MultipleFailureException;
 import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
 
 /**
- * Statement which run after tests or classes. Upon failure a screenshot is
- * captured.
- * 
+ * Statement which run after tests or classes. Upon failure a screenshot is captured.
+ *
  * @author mlabuda@redhat.com
  * @author ljelinko
  * @author Andrej Podhradsky (apodhrad@redhat.com)
  *
  */
-public class RunAfters extends AbstractStatementWithScreenshot {
+public class RunAfterClasses extends AbstractStatementWithScreenshot {
 
-	private final List<FrameworkMethod> fAfters;
+	private final List<FrameworkMethod> afterClasses;
 	private Requirements requirements;
 
 	/**
 	 * Instantiates a new run afters.
 	 *
-	 * @param config
-	 *            the config
-	 * @param next
-	 *            the next
-	 * @param testClass
-	 *            the test class
-	 * @param method
-	 *            the method
-	 * @param target
-	 *            the target
-	 * @param afters
-	 *            the afters
+	 * @param config the config
+	 * @param next the next
+	 * @param testClass the test class
+	 * @param afters the afters
 	 */
-	public RunAfters(String config, Statement next, TestClass testClass, FrameworkMethod method, Object target,
-			Requirements requirements) {
-		super(config, next, testClass, method, target);
-		fAfters = testClass.getAnnotatedMethods(After.class);
+	public RunAfterClasses(String config, Statement next, TestClass testClass, Requirements requirements) {
+		super(config, next, testClass, null, null);
+		afterClasses = testClass.getAnnotatedMethods(AfterClass.class);
 		this.requirements = requirements;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see org.junit.runners.model.Statement#evaluate()
 	 */
 	@Override
@@ -71,26 +59,26 @@ public class RunAfters extends AbstractStatementWithScreenshot {
 			nextStatement.evaluate();
 		} catch (Throwable e) {
 			errors.add(e);
-		}
-
-		for (FrameworkMethod each : fAfters) {
+		} 
+		
+		for (FrameworkMethod each : afterClasses) {
 			try {
-				frameworkMethod = each;
+				frameworkMethod = each; 
 				frameworkMethod.invokeExplosively(target);
 			} catch (Throwable e) {
-				if (ScreenshotCapturer.shouldCaptureScreenshotOnException(e)) {
-					if (isClassLevel()) {
+				if(ScreenshotCapturer.shouldCaptureScreenshotOnException(e)){
+					if (isClassLevel()){
 						createScreenshot("AfterClass");
 					} else {
-						createScreenshot("After");
+						createScreenshot("After");				
 					}
 				}
 				errors.add(e);
 			}
 		}
-
+		
 		MultipleFailureException.assertEmpty(errors);
 
-		requirements.runAfter();
+		requirements.runAfterClass();
 	}
 }

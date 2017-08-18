@@ -42,6 +42,8 @@ public class CleanErrorLogRequirement implements Requirement<CleanErrorLog> {
 	@Documented
 	public @interface CleanErrorLog {
 
+		boolean before() default false;
+		
 	}
 
 	/**
@@ -52,6 +54,13 @@ public class CleanErrorLogRequirement implements Requirement<CleanErrorLog> {
 		log.info("Clean all records in Error Log");
 		new LogView().open();
 		new LogView().deleteLog();
+	}
+
+	@Override
+	public void runBefore() {
+		if (cleanErrorLog.before()) {
+			fulfill();
+		}
 	}
 
 	@Override
